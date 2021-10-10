@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+// Note that no virtual functions are required in compile-time
+// polymorphism.
+template <typename T>
+// This is the parent class. It takes a template parameter
+class Citrus {
+  public:
+    void description() {
+      static_cast<T*>(this) -> description();
+    }
+};
+
+// This is the child class. Signature of CRTP: Child class is passed 
+// as a template parameter to the parent class.
+class Clementine : public Citrus<Clementine>
+{
+  public:
+    void description() {
+      cout << "I am a Clementine." << endl;
+    }
+};
+
+// This is the child class. Signature of CRTP: Child class is passed
+// as a template parameter to the parent class.
+class Lime : public Citrus<Lime>
+{
+  public:
+    void description() {
+      cout << "I am a Lime." <<endl;
+    }
+};
+
+// A function that calls the appropriate methd based on the argument.
+template <typename T>
+void fruit_description(Citrus<T> citrus) {
+  citrus.description();
+}
+
+int main() {
+    Clementine clementine;
+    Lime lime;
+    fruit_description(clementine);
+    fruit_description(lime);
+    return 0;
+}
